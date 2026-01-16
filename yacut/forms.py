@@ -4,8 +4,7 @@ from wtforms.validators import (DataRequired,
                                 Length,
                                 Optional,
                                 URL,
-                                ValidationError
-                                )
+                                ValidationError)
 
 from .utils import RESERVED, is_short_valid
 

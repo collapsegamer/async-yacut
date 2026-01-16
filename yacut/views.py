@@ -18,7 +18,10 @@ from .extensions import db
 from .forms import FilesForm, URLMapForm
 from .models import URLMap
 from .utils import RESERVED, get_unique_short_id, is_short_valid
-from .ydisk import download_bytes, get_download_href, get_upload_href, upload_bytes
+from .ydisk import (download_bytes,
+                    get_download_href,
+                    get_upload_href,
+                    upload_bytes)
 
 ui_bp = Blueprint('ui', __name__)
 
@@ -37,7 +40,11 @@ def index():
         custom = (form.custom_id.data or '').strip() or None
 
         if custom:
-            if custom in RESERVED or (len(custom) > 16) or (not is_short_valid(custom)):
+            if (
+                custom in RESERVED
+                or len(custom) > 16
+                or not is_short_valid(custom)
+            ):
                 flash('Предложенный вариант короткой ссылки уже существует.')
                 return render_template('index.html', form=form, short_url=None)
 
@@ -75,17 +82,17 @@ def files():
                     filename = fs.filename or 'file'
                     content = fs.read()
 
-                    # Тест: path должен содержать '/' перед именем файла.
                     disk_path = f'app:/yacut/{uuid.uuid4().hex}/{filename}'
 
                     href = await get_upload_href(session, token, disk_path)
                     await upload_bytes(session, href, content)
 
-                    # Тест: после upload должен быть вызван download endpoint.
                     await get_download_href(session, token, disk_path)
 
                     short = get_unique_short_id()
-                    db.session.add(URLMap(original=f'ydisk:{disk_path}:{filename}', short=short))
+                    db.session.add(
+                        URLMap(original=f'ydisk:{disk_path}:{filename}',
+                               short=short))
                     return filename, short
 
                 return await asyncio.gather(*(_one(f) for f in uploaded_files))
@@ -93,7 +100,8 @@ def files():
         try:
             pairs = asyncio.run(_upload_all())
             db.session.commit()
-            results = [{'filename': fn, 'short_url': _short_url(short)} for fn, short in pairs]
+            results = [{'filename': fn, 'short_url': _short_url(
+                short)} for fn, short in pairs]
         except Exception:
             db.session.rollback()
             flash('Ошибка загрузки файлов.')

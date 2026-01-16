@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <title>YaCut - файлы</title>
+</head>
+
+<body>
+<header class="pb-5">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+    <div class="container">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('ui.index') }}">Главная</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('ui.files') }}">Файлы</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="container my-5 px-4">
+    <h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
+    <p class="text-center my-4">Загрузка файлов на Диск и генерация коротких ссылок</p>
+
+    <div class="row">
+      <div class="col-lg-6 offset-lg-3">
+        <form method="post" enctype="multipart/form-data">
+          {{ form.csrf_token }}
+
+          <div class="mb-3">
+            <input type="file" class="form-control" name="{{ form.files.name }}" multiple>
+            {% for e in form.files.errors %}
+              <div class="text-danger mt-1">{{ e }}</div>
+            {% endfor %}
+          </div>
+
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for msg in messages %}
+                <div class="text-danger mb-2">{{ msg }}</div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+          <input type="submit" class="btn btn-primary" value="Загрузить">
+        </form>
+      </div>
+    </div>
+
+    {% if results %}
+      <div class="row mt-4">
+        <div class="col-lg-8 offset-lg-2">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Имя файла</th>
+                <th>Короткая ссылка</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in results %}
+                <tr>
+                  <td>{{ row.filename }}</td>
+                  <td><a href="{{ row.short_url }}">{{ row.short_url }}</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% endif %}
+  </section>
+</main>
+
+<footer class="fixed-bottom border-top text-center py-3">
+  <p>Укоротитель ссылок YaCut</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="{{ url_for('static', filename='img/fav/fav.ico') }}" type="image">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='img/fav/apple-touch-icon.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/fav/favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='img/fav/favicon-16x16.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <title>YaCut - укоротитель ссылок</title>
+</head>
+
+<body>
+<header class="pb-5">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow-sm">
+    <div class="container">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('ui.index') }}">Главная</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('ui.files') }}">Файлы</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="container my-5 px-4">
+    <h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
+    <p class="text-center my-4">
+      Создайте короткую ссылку автоматически или предложите свой вариант
+    </p>
+
+    <div class="container">
+      <div class="row my-3">
+        <div class="col-sm"></div>
+
+        <div class="col-sm">
+          <form method="post" novalidate>
+            {{ form.csrf_token }}
+
+            <div>
+              <input
+                type="text"
+                class="form-control form-control-lg py-2 mb-3"
+                id="form-title"
+                name="{{ form.original_link.name }}"
+                placeholder="Длинная ссылка"
+                value="{{ form.original_link.data or '' }}"
+              >
+              {% for e in form.original_link.errors %}
+                <p><span style="color:red">{{ e }}</span></p>
+              {% endfor %}
+            </div>
+
+            <div>
+              <input
+                type="text"
+                class="form-control form-control-lg py-2 mb-3"
+                id="form-link"
+                name="{{ form.custom_id.name }}"
+                placeholder="Ваш вариант короткой ссылки"
+                value="{{ form.custom_id.data or '' }}"
+              >
+              {% for e in form.custom_id.errors %}
+                <p><span style="color:red">{{ e }}</span></p>
+              {% endfor %}
+            </div>
+
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for msg in messages %}
+                  <p><span style="color:red">{{ msg }}</span></p>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <input type="submit" class="btn btn-primary" value="Создать">
+          </form>
+        </div>
+
+        <div class="col-sm"></div>
+      </div>
+    </div>
+
+    {% if short_url %}
+      <div class="container">
+        <div class="row">
+          <div class="col-sm"></div>
+          <div class="col-sm text-center">
+            <h5 class="text-center">Ваша ссылка</h5>
+            <a href="{{ short_url }}">{{ short_url }}</a>
+          </div>
+          <div class="col-sm"></div>
+        </div>
+      </div>
+    {% endif %}
+  </section>
+</main>
+
+<footer class="fixed-bottom border-top text-center py-3">
+  <p>Укоротитель ссылок YaCut</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+</html>

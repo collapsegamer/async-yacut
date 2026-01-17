@@ -50,6 +50,7 @@ DB=sqlite:///db.sqlite3
 Создать базу данных и применить миграции:
 
 ```
+flask db migrate
 flask db upgrade
 ```
 

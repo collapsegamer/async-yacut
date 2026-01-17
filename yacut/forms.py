@@ -31,7 +31,8 @@ class URLMapForm(FlaskForm):
                 message=(
                     'Недопустимые символы. '
                     'Разрешены только латинские буквы и цифры.'
-                ),),
+                ),
+            ),
         ],
     )
     submit = SubmitField('Создать')

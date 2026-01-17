@@ -7,7 +7,6 @@ from wtforms.validators import (DataRequired,
                                 ValidationError,
                                 Regexp)
 
-from .utils import is_short_valid
 from .constants import MAX_SHORT_LENGTH, RESERVED
 
 
@@ -43,11 +42,6 @@ class URLMapForm(FlaskForm):
         if field.data in RESERVED:
             raise ValidationError(
                 'Предложенный вариант короткой ссылки уже существует.')
-        if not is_short_valid(field.data):
-            raise ValidationError(
-                'Недопустимые символы. '
-                'Разрешены только латинские буквы и цифры.'
-            )
 
 
 class FilesForm(FlaskForm):

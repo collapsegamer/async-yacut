@@ -14,11 +14,11 @@ from flask import (
     send_file,
 )
 
-from .constants import RESERVED, MAX_SHORT_LENGTH
+from .constants import RESERVED
 from .extensions import db
 from .forms import FilesForm, URLMapForm
 from .models import URLMap
-from .utils import get_unique_short_id, is_short_valid
+from .utils import get_unique_short_id
 from .ydisk import (download_bytes,
                     get_download_href,
                     get_upload_href,
@@ -41,14 +41,6 @@ def index():
         custom = (form.custom_id.data or '').strip() or None
 
         if custom:
-            if (
-                custom in RESERVED
-                or len(custom) > MAX_SHORT_LENGTH
-                or not is_short_valid(custom)
-            ):
-                flash('Предложенный вариант короткой ссылки уже существует.')
-                return render_template('index.html', form=form, short_url=None)
-
             if URLMap.query.filter_by(short=custom).first():
                 flash('Предложенный вариант короткой ссылки уже существует.')
                 return render_template('index.html', form=form, short_url=None)

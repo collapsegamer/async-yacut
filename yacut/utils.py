@@ -1,13 +1,8 @@
 import random
-import re
 
+from .constants import RESERVED, ALPHABET, SHORT_RE
 from .extensions import db
 from .models import URLMap
-
-ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-SHORT_RE = re.compile(r'^[a-zA-Z0-9]{1,16}$')
-
-RESERVED = {'files'}
 
 
 def is_short_valid(value: str) -> bool:

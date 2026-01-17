@@ -4,9 +4,11 @@ from wtforms.validators import (DataRequired,
                                 Length,
                                 Optional,
                                 URL,
-                                ValidationError)
+                                ValidationError,
+                                Regexp)
 
-from .utils import RESERVED, is_short_valid
+from .utils import is_short_valid
+from .constants import MAX_SHORT_LENGTH, RESERVED
 
 
 class URLMapForm(FlaskForm):
@@ -21,7 +23,16 @@ class URLMapForm(FlaskForm):
         'Ваш вариант короткой ссылки',
         validators=[
             Optional(),
-            Length(max=16, message='Максимум 16 символов.'),
+            Length(
+                max=MAX_SHORT_LENGTH,
+                message=f'Максимум {MAX_SHORT_LENGTH} символов.'
+            ),
+            Regexp(
+                r'^[a-zA-Z0-9]+$',
+                message=(
+                    'Недопустимые символы. '
+                    'Разрешены только латинские буквы и цифры.'
+                ),),
         ],
     )
     submit = SubmitField('Создать')

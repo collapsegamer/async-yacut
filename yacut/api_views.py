@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 
+from .constants import MAX_SHORT_LENGTH
 from .extensions import db
 from .models import URLMap
 from .utils import RESERVED, get_unique_short_id, is_short_valid
@@ -28,7 +29,7 @@ def create_short():
     if custom_id:
         if (
             custom_id in RESERVED
-            or len(custom_id) > 16
+            or len(custom_id) > MAX_SHORT_LENGTH
             or not is_short_valid(custom_id)
         ):
             return api_error(
